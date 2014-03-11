@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2013, Red Hat, Inc., and individual contributors
+ * Copyright 2012, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,44 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.wildfly.extension.picketlink.federation.service;
 
-package org.wildfly.extension.picketlink.idm.model;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.jboss.as.server.deployment.DeploymentUnit;
+import org.jboss.msc.service.Service;
+import org.wildfly.extension.picketlink.federation.metrics.PicketLinkSubsystemMetrics;
 
 /**
- * <p> XML elements used in the schema. This elements are not related with the subsystem's model. Usually they are used to group model elements.
- * </p>
+ * <p> Interface for PicketLink specific services. </p>
  *
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * @since Mar 8, 2012
  */
-public enum XMLElement {
+public interface PicketLinkFederationService<T> extends Service<T> {
 
-    RELATIONSHIPS("relationships"),
-    LDAP_MAPPINGS("mappings"),
-    IDENTITY_STORE_CREDENTIAL_HANDLERS("credential-handlers");
+    /**
+     * <p> Configures a {@link org.jboss.as.server.deployment.DeploymentUnit} as a PicketLink deployment. For example: Identity Providers and Service Providers. </p>
+     *
+     * @param deploymentUnit
+     */
+    void configure(DeploymentUnit deploymentUnit);
 
-    private static final Map<String, XMLElement> xmlElements = new HashMap<String, XMLElement>();
-
-    static {
-        for (XMLElement element : values()) {
-            xmlElements.put(element.getName(), element);
-        }
-    }
-
-    private final String name;
-
-    private XMLElement(String name) {
-        this.name = name;
-    }
-
-    public static XMLElement forName(String name) {
-        return xmlElements.get(name);
-    }
-
-    public String getName() {
-        return this.name;
-    }
+    /**
+     * <p> Returns a {@link PicketLinkSubsystemMetrics}. </p>
+     *
+     * @return
+     */
+    PicketLinkSubsystemMetrics getMetrics();
 }

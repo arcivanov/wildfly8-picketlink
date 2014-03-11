@@ -20,14 +20,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.wildfly.extension.picketlink.idm.model.parser;
+package org.wildfly.extension.picketlink.common.parser;
 
 import org.jboss.as.controller.ResourceDefinition;
 import org.jboss.as.controller.SimpleAttributeDefinition;
-import org.wildfly.extension.picketlink.idm.model.ModelElement;
-import org.wildfly.extension.picketlink.idm.model.XMLElement;
 import org.jboss.dmr.ModelNode;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
+import org.wildfly.extension.picketlink.common.model.ModelElement;
+import org.wildfly.extension.picketlink.common.model.XMLElement;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -35,8 +35,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.wildfly.extension.picketlink.idm.model.AbstractResourceDefinition.getAttributeDefinition;
-import static org.wildfly.extension.picketlink.idm.model.AbstractResourceDefinition.getChildResourceDefinitions;
+import static org.wildfly.extension.picketlink.common.model.AbstractResourceDefinition.getAttributeDefinition;
+import static org.wildfly.extension.picketlink.common.model.AbstractResourceDefinition.getChildResourceDefinitions;
 
 /**
  * <p> A generic XML Writer for all {@link ModelElement} definitions. </p>
@@ -51,22 +51,27 @@ public class ModelXMLElementWriter {
     private XMLElement parentElement;
     private String nameAttribute;
 
-    ModelXMLElementWriter(ModelElement element, Map<String, ModelXMLElementWriter> register) {
+    public ModelXMLElementWriter(ModelElement element, Map<String, ModelXMLElementWriter> register) {
         this.modelElement = element;
         this.register = Collections.unmodifiableMap(register);
     }
 
-    ModelXMLElementWriter(ModelElement element, XMLElement parentElement, Map<String, ModelXMLElementWriter> register) {
+    public ModelXMLElementWriter(ModelElement element, XMLElement parentElement, Map<String, ModelXMLElementWriter> register) {
         this(element, register);
         this.parentElement = parentElement;
     }
 
-    ModelXMLElementWriter(ModelElement element, String nameAttribute, Map<String, ModelXMLElementWriter> register) {
+    public ModelXMLElementWriter(ModelElement element, String nameAttribute, Map<String, ModelXMLElementWriter> register) {
         this(element, register);
         this.nameAttribute = nameAttribute;
     }
 
-    void write(XMLExtendedStreamWriter writer, ModelNode modelNode) throws XMLStreamException {
+    public ModelXMLElementWriter(ModelElement element, String nameAttribute, XMLElement parentElement, Map<String, ModelXMLElementWriter> register) {
+        this(element, nameAttribute, register);
+        this.parentElement = parentElement;
+    }
+
+    public void write(XMLExtendedStreamWriter writer, ModelNode modelNode) throws XMLStreamException {
         String nodeName = modelNode.asProperty().getName();
 
         if (nodeName.equals(this.modelElement.getName())) {

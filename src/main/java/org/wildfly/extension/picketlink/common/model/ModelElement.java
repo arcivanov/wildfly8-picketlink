@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.wildfly.extension.picketlink.idm.model;
+package org.wildfly.extension.picketlink.common.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +42,9 @@ public enum ModelElement {
     COMMON_CODE("code"),
     COMMON_SUPPORTS_ALL("supports-all"),
     COMMON_MODULE("module"),
+    COMMON_FILE("file"),
+    COMMON_RELATIVE_TO("relative-to"),
+
     /*
      * Identity Management model elements
      */
@@ -58,7 +61,6 @@ public enum ModelElement {
     JPA_STORE_ENTITY_MANAGER_FACTORY("entity-manager-factory"),
     FILE_STORE("file-store"),
     FILE_STORE_WORKING_DIR("working-dir"),
-    FILE_STORE_RELATIVE_TO("relative-to"),
     FILE_STORE_ALWAYS_CREATE_FILE("always-create-files"),
     FILE_STORE_ASYNC_WRITE("async-write"),
     FILE_STORE_ASYNC_THREAD_POOL("async-write-thread-pool"),
@@ -78,7 +80,73 @@ public enum ModelElement {
     LDAP_STORE_ATTRIBUTE_IS_IDENTIFIER("is-identifier"),
     LDAP_STORE_ATTRIBUTE_READ_ONLY("read-only"),
     SUPPORTED_TYPES("supported-types"),
-    SUPPORTED_TYPE("supported-type");
+    SUPPORTED_TYPE("supported-type"),
+
+    /*
+     * Federation model elements
+     */
+    FEDERATION("federation"),
+
+    COMMON_HANDLER("handler"),
+    COMMON_HANDLER_PARAMETER("handler-parameter"),
+    COMMON_SECURITY_DOMAIN("security-domain"),
+    COMMON_STRICT_POST_BINDING("strict-post-binding"),
+    COMMON_SUPPORTS_SIGNATURES("support-signatures"),
+    COMMON_SUPPORT_METADATA("support-metadata"),
+
+    /*
+     * Identity Provider model elements
+     */
+    IDENTITY_PROVIDER("identity-provider"),
+    IDENTITY_PROVIDER_TRUST_DOMAIN("trust-domain"),
+    IDENTITY_PROVIDER_TRUST_DOMAIN_NAME("name"),
+    IDENTITY_PROVIDER_TRUST_DOMAIN_CERT_ALIAS("cert-alias"),
+    IDENTITY_PROVIDER_SAML_METADATA("idp-metadata"),
+    IDENTITY_PROVIDER_SAML_METADATA_ORGANIZATION("organization"),
+    IDENTITY_PROVIDER_EXTERNAL("external"),
+    IDENTITY_PROVIDER_ATTRIBUTE_MANAGER("attribute-manager"),
+    IDENTITY_PROVIDER_ROLE_GENERATOR("role-generator"),
+    IDENTITY_PROVIDER_ENCRYPT("encrypt"),
+    IDENTITY_PROVIDER_SSL_AUTHENTICATION("ssl-authentication"),
+    /*
+     * KeyStore model elements
+     */
+    KEY_STORE("key-store"),
+    KEY_STORE_PASSWORD("password"),
+    KEY_STORE_SIGN_KEY_ALIAS("sign-key-alias"),
+    KEY_STORE_SIGN_KEY_PASSWORD("sign-key-password"),
+    /*
+     * Service Provider model elements
+     */
+    SERVICE_PROVIDER("service-provider"),
+    SERVICE_PROVIDER_POST_BINDING("post-binding"),
+    SERVICE_PROVIDER_ERROR_PAGE("error-page"),
+    SERVICE_PROVIDER_LOGOUT_PAGE("logout-page"),
+    /*
+     * Security Token Service model elements
+     */
+    SECURITY_TOKEN_SERVICE("security-token-service"),
+    /*
+     * SAML model elements
+     */
+    SAML("saml"),
+    SAML_TOKEN_TIMEOUT("token-timeout"),
+    SAML_CLOCK_SKEW("clock-skew"),
+    /*
+     * Metric model elements
+     */
+    METRICS_CREATED_ASSERTIONS_COUNT("created-assertions-count"),
+    METRICS_RESPONSE_TO_SP_COUNT("response-to-sp-count"),
+    METRICS_ERROR_RESPONSE_TO_SP_COUNT("error-response-to-sp-count"),
+    METRICS_ERROR_SIGN_VALIDATION_COUNT("error-sign-validation-count"),
+    METRICS_ERROR_TRUSTED_DOMAIN_COUNT("error-trusted-domain-count"),
+    METRICS_EXPIRED_ASSERTIONS_COUNT("expired-assertions-count"),
+    METRICS_LOGIN_INIT_COUNT("login-init-count"),
+    METRICS_LOGIN_COMPLETE_COUNT("login-complete-count"),
+    METRICS_REQUEST_FROM_IDP_COUNT("request-from-idp-count"),
+    METRICS_RESPONSE_FROM_IDP_COUNT("response-from-idp-count"),
+    METRICS_REQUEST_TO_IDP_COUNT("request-to-idp-count");
+
     private static final Map<String, ModelElement> modelElements = new HashMap<String, ModelElement>();
 
     static {

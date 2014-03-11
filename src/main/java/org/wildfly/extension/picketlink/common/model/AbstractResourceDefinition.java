@@ -20,16 +20,15 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.wildfly.extension.picketlink.idm.model;
+package org.wildfly.extension.picketlink.common.model;
 
-import org.jboss.as.controller.AttributeDefinition;
 import org.jboss.as.controller.OperationStepHandler;
 import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.ResourceDefinition;
 import org.jboss.as.controller.SimpleAttributeDefinition;
 import org.jboss.as.controller.SimpleResourceDefinition;
+import org.jboss.as.controller.descriptions.ResourceDescriptionResolver;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
-import org.wildfly.extension.picketlink.idm.IDMExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,21 +54,14 @@ public abstract class AbstractResourceDefinition extends SimpleResourceDefinitio
     private final List<SimpleAttributeDefinition> attributes = new ArrayList<SimpleAttributeDefinition>();
 
     protected AbstractResourceDefinition(ModelElement modelElement, final OperationStepHandler addHandler,
-                                            final OperationStepHandler removeHandler, SimpleAttributeDefinition... attributes) {
-        super(PathElement.pathElement(modelElement.getName()), IDMExtension.getResourceDescriptionResolver(modelElement.getName()), addHandler, removeHandler);
+                                            final OperationStepHandler removeHandler, ResourceDescriptionResolver resourceDescriptor, SimpleAttributeDefinition... attributes) {
+        super(PathElement.pathElement(modelElement.getName()), resourceDescriptor, addHandler, removeHandler);
         this.modelElement = modelElement;
         Collections.addAll(this.attributes, attributes);
     }
 
-    protected AbstractResourceDefinition(ModelElement modelElement, String name, final OperationStepHandler addHandler, SimpleAttributeDefinition... attributes) {
-        super(PathElement.pathElement(modelElement.getName(), name), IDMExtension.getResourceDescriptionResolver(modelElement.getName()), addHandler, IDMConfigRemoveStepHandler.INSTANCE);
-        this.modelElement = modelElement;
-        Collections.addAll(this.attributes, attributes);
-    }
-
-    protected AbstractResourceDefinition(ModelElement modelElement, final OperationStepHandler addHandler,
-                                            SimpleAttributeDefinition... attributes) {
-        super(PathElement.pathElement(modelElement.getName()), IDMExtension.getResourceDescriptionResolver(modelElement.getName()), addHandler, IDMConfigRemoveStepHandler.INSTANCE);
+    protected AbstractResourceDefinition(ModelElement modelElement, String name, final OperationStepHandler addHandler, final OperationStepHandler removeHandler,ResourceDescriptionResolver resourceDescriptor, SimpleAttributeDefinition... attributes) {
+        super(PathElement.pathElement(modelElement.getName(), name), resourceDescriptor, addHandler, removeHandler);
         this.modelElement = modelElement;
         Collections.addAll(this.attributes, attributes);
     }
@@ -105,7 +97,7 @@ public abstract class AbstractResourceDefinition extends SimpleResourceDefinitio
         }
     }
 
-    private void addChildResourceDefinition(ModelElement resourceDefinitionKey, ResourceDefinition attribute) {
+    private void addChildResourceDefinition(ModelElement resourceDefinitionKey, ResourceDefinition resourceDefinition) {
         List<ResourceDefinition> childResources = childResourceDefinitions.get(resourceDefinitionKey);
 
         if (childResources == null) {
@@ -113,8 +105,14 @@ public abstract class AbstractResourceDefinition extends SimpleResourceDefinitio
             childResourceDefinitions.put(resourceDefinitionKey, childResources);
         }
 
-        if (!childResources.contains(attribute)) {
-            childResources.add(attribute);
+        if (!childResources.contains(resourceDefinitionKey)) {
+            for (ResourceDefinition childResource : childResources) {
+                if (childResource.getPathElement().getKey().equals(resourceDefinition.getPathElement().getKey())) {
+                    return;
+                }
+            }
+
+            childResources.add(resourceDefinition);
         }
     }
 
@@ -125,9 +123,7 @@ public abstract class AbstractResourceDefinition extends SimpleResourceDefinitio
         }
     }
 
-    private OperationStepHandler createAttributeWriterHandler() {
-        return new IDMConfigWriteAttributeHandler(this.attributes.toArray(new AttributeDefinition[this.attributes.size()]));
-    }
+    protected abstract OperationStepHandler createAttributeWriterHandler();
 
     public List<SimpleAttributeDefinition> getAttributes() {
         return Collections.unmodifiableList(this.attributes);
@@ -138,7 +134,7 @@ public abstract class AbstractResourceDefinition extends SimpleResourceDefinitio
         resourceRegistration.registerReadWriteAttribute(definition, null, writeHandler);
     }
 
-    protected void addChildResourceDefinition(ResourceDefinition definition, ManagementResourceRegistration resourceRegistration) {
+    protected void addChildResourceDefinition(AbstractResourceDefinition definition, ManagementResourceRegistration resourceRegistration) {
         addChildResourceDefinition(this.modelElement, definition);
         resourceRegistration.registerSubModel(definition);
     }
