@@ -7,7 +7,7 @@
     <parent>
         <artifactId>wildfly-parent</artifactId>
         <groupId>org.wildfly</groupId>
-        <version>9.0.0.Alpha2-SNAPSHOT</version>
+        <version>8.2.0.Final</version>
     </parent>
 
     <groupId>org.wildfly</groupId>
@@ -16,14 +16,19 @@
 
     <name>WildFly: PicketLink Subsystem</name>
 
+    <properties>
+        <version.org.picketlink>2.7.0.CR3</version.org.picketlink>
+        <version.org.wildfly.core>1.0.0.Alpha16</version.org.wildfly.core>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>org.wildfly.core</groupId>
+            <groupId>org.wildfly</groupId>
             <artifactId>wildfly-server</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.wildfly.core</groupId>
+            <groupId>org.wildfly</groupId>
             <artifactId>wildfly-controller</artifactId>
         </dependency>
 
@@ -78,6 +83,7 @@
         <dependency>
             <groupId>org.picketlink</groupId>
             <artifactId>picketlink-idm-simple-schema</artifactId>
+            <version>${version.org.picketlink}</version>
         </dependency>
 
         <dependency>
@@ -93,6 +99,7 @@
         <dependency>
             <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-subsystem-test</artifactId>
+            <version>${version.org.wildfly.core}</version>
             <type>pom</type>
             <scope>test</scope>
         </dependency>
