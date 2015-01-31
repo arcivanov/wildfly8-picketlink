@@ -97,9 +97,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.wildfly.core</groupId>
+            <groupId>org.wildfly</groupId>
             <artifactId>wildfly-subsystem-test</artifactId>
-            <version>${version.org.wildfly.core}</version>
             <type>pom</type>
             <scope>test</scope>
         </dependency>
