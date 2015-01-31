@@ -80,9 +80,9 @@ public class KeyAddHandler extends AbstractAddStepHandler {
     }
 
     @Override
-    protected void rollbackRuntime(OperationContext context, ModelNode operation, Resource resource) {
+    protected void rollbackRuntime(OperationContext context, ModelNode operation, ModelNode model, List<ServiceController<?>> controllers) {
         try {
-            KeyRemoveHandler.INSTANCE.performRuntime(context, operation, resource.getModel());
+            KeyRemoveHandler.INSTANCE.performRuntime(context, operation, model);
         } catch (OperationFailedException ignore) {
         }
     }

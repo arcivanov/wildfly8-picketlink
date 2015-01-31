@@ -75,9 +75,9 @@ public class HandlerParameterAddHandler extends AbstractAddStepHandler {
         return kv;
     }
 
-    @Override protected void rollbackRuntime(OperationContext context, ModelNode operation, Resource resource) {
+    @Override protected void rollbackRuntime(OperationContext context, ModelNode operation, ModelNode model, List<ServiceController<?>> controllers) {
         try {
-            HandlerParameterRemoveHandler.INSTANCE.performRuntime(context, operation, resource.getModel());
+            HandlerParameterRemoveHandler.INSTANCE.performRuntime(context, operation, model);
         } catch (OperationFailedException ignore) {
 
         }

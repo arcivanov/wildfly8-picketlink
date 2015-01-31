@@ -138,9 +138,9 @@ public class ServiceProviderAddHandler extends AbstractEntityProviderAddHandler 
     }
 
     @Override
-    protected void rollbackRuntime(OperationContext context, ModelNode operation, Resource resource) {
+    protected void rollbackRuntime(OperationContext context, ModelNode operation, ModelNode model, List<ServiceController<?>> controllers) {
         try {
-            ServiceProviderRemoveHandler.INSTANCE.performRuntime(context, operation, resource.getModel());
+            ServiceProviderRemoveHandler.INSTANCE.performRuntime(context, operation, model);
         } catch (OperationFailedException ignore) {
         }
     }
