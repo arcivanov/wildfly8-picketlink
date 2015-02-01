@@ -5,19 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>wildfly-parent</artifactId>
-        <groupId>org.wildfly</groupId>
+        <groupId>biz.ivanov.wildfly</groupId>
+        <artifactId>wildfly8-picketlink-parent</artifactId>
         <version>8.2.0.Final</version>
     </parent>
 
     <artifactId>wildfly-picketlink</artifactId>
     <packaging>jar</packaging>
 
-    <name>WildFly: PicketLink Subsystem</name>
-
-    <properties>
-        <version.org.picketlink>2.7.0.CR3</version.org.picketlink>
-    </properties>
+    <name>WildFly: WildFly 8 PicketLink Subsystem</name>
 
     <dependencies>
         <dependency>
@@ -81,7 +77,6 @@
         <dependency>
             <groupId>org.picketlink</groupId>
             <artifactId>picketlink-idm-simple-schema</artifactId>
-            <version>${version.org.picketlink}</version>
         </dependency>
 
         <dependency>
