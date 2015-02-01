@@ -7,7 +7,7 @@
     <parent>
         <groupId>biz.ivanov.wildfly</groupId>
         <artifactId>wildfly8-picketlink-parent</artifactId>
-        <version>8.2.0.Final</version>
+        <version>8.2.0.Final-SNAPSHOT</version>
     </parent>
 
     <artifactId>wildfly-picketlink</artifactId>

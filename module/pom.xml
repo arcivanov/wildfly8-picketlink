@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>biz.ivanov.wildfly</groupId>
-        <artifactId>wildfly8-picketlink</artifactId>
+        <artifactId>wildfly8-picketlink-parent</artifactId>
         <version>8.2.0.Final-SNAPSHOT</version>
     </parent>
 
@@ -18,8 +18,14 @@
     <dependencies>
         <dependency>
             <groupId>biz.ivanov.wildfly</groupId>
-            <artifactId>wildfly8-picketlink</artifactId>
-            <version>${version.org.wildfly}</version>
+            <artifactId>wildfly-picketlink</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>biz.ivanov.wildfly</groupId>
+            <artifactId>wildfly-picketlink</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
