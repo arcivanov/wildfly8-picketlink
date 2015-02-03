@@ -1,20 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wildfly</groupId>
         <version>8.2.0.Final</version>
         <artifactId>wildfly-parent</artifactId>
     </parent>
+
     <groupId>biz.ivanov.wildfly</groupId>
     <artifactId>wildfly8-picketlink-parent</artifactId>
-    <version>8.2.0.Final-SNAPSHOT</version>
+    <version>1.0.0.Final-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WildFly: WildFly 8 PicketLink Parent</name>
+
+    <url>http://ivanov.biz/picketlink-sub…-for-wildfly-8/</url>
+    <description>PicketLink Subsystem for WildFly 8</description>
+
+    <!-- Licenses -->
+    <licenses>
+        <license>
+            <name>lgpl_v2_1</name>
+            <url>http://repository.jboss.com/licenses/lgpl-2.1.txt</url>
+        </license>
+    </licenses>
+
+    <!-- Developers -->
+    <developers>
+        <developer>
+            <name>Arcadiy Ivanov</name>
+            <email>arcadiy@ivanov.biz</email>
+        </developer>
+        <developer>
+            <name>PicketLink contributors</name>
+        </developer>
+    </developers>
+
+    <!-- Source -->
+    <scm>
+        <connection>scm:git:git://github.com/arcivanov/wildfly8-picketlink.git</connection>
+        <developerConnection>scm:git:git@github.com:arcivanov/wildfly8-picketlink.git</developerConnection>
+        <url>http://github.com/arcivanov/wildfly8-picketlink</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
         <version.org.wildfly>8.2.0.Final</version.org.wildfly>
         <version.org.picketlink>2.7.0.CR3</version.org.picketlink>
         <jboss.as.release.version>${version.org.wildfly}</jboss.as.release.version>
+        <version.wildfly8-picketlink>${project.version}</version.wildfly8-picketlink>
     </properties>
     <modules>
         <module>subsystem</module>
@@ -548,13 +582,26 @@
         <dependency>
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-build-config</artifactId>
-            <version>${version.org.wildfly}</version>
         </dependency>
     </dependencies>
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <tarLongFileMode>posix</tarLongFileMode>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <dependencies>
                     <dependency>

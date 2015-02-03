@@ -1,0 +1,99 @@
+<project name="Resolve resource dependencies" default="init" basedir=".">
+    <target name="init">
+        <scriptdef name="resolve-resource-dependencies" language="javascript">
+            <element name="source-files" type="fileset" />
+
+            <![CDATA[
+            load('nashorn:mozilla_compat.js');
+
+            importClass(java.io.File);
+            importClass(java.io.FileInputStream);
+            importClass(java.io.FileOutputStream);
+            importClass(java.nio.file.Files);
+            importClass(java.nio.file.StandardCopyOption);
+            importClass(javax.xml.parsers.DocumentBuilderFactory);
+            importClass(javax.xml.transform.OutputKeys);
+            importClass(javax.xml.transform.TransformerFactory);
+            importClass(javax.xml.transform.dom.DOMSource);
+            importClass(javax.xml.transform.stream.StreamResult);
+            importClass(javax.xml.xpath.XPath);
+            importClass(javax.xml.xpath.XPathConstants);
+            importClass(javax.xml.xpath.XPathFactory);
+            importClass(org.w3c.dom.Document);
+            importClass(org.xml.sax.InputSource);
+
+            var xpathExp = XPathFactory.newInstance().newXPath().compile("/module/resources/artifact");
+            var filesets = elements.get("source-files");
+            for (i = 0; i < filesets.size(); i++) {
+                var fs = filesets.get(i);
+                var ds = fs.getDirectoryScanner(project);
+                var basedir  = fs.getDir(project);
+                var srcFiles = ds.getIncludedFiles();
+
+                for (j = 0; j < srcFiles.length; j++) {
+                    var filename = srcFiles[j];
+                    var srcFile = new File(basedir, filename);
+                    self.log("processing file '" + srcFile + "'");
+
+                    var fIn = new FileInputStream(srcFile);
+                    try {
+                         var dbf = DocumentBuilderFactory.newInstance();
+                         var doc = dbf.newDocumentBuilder().parse(new InputSource(fIn));
+                    }
+                    finally {
+                        fIn.close();
+                    }
+                    var nodeList = xpathExp.evaluate(doc, XPathConstants.NODESET);
+                    for(k = 0; k < nodeList.getLength(); k++) {
+                        var node = nodeList.item(k);
+                        var attrNode = node.getAttributes().getNamedItem("name");
+                        var artifactFileName = attrNode.getNodeValue().trim();
+                        var literalFileName = artifactFileName;
+
+                        if(artifactFileName.startsWith("${") && artifactFileName.endsWith("}")) {
+                            var varName = artifactFileName.substring(2, artifactFileName.length() - 1);
+                            artifactFileName = project.getProperty(varName);
+                            if(artifactFileName == null) {
+                                varName = varName + ":jar";
+                                artifactFileName = project.getProperty(varName);
+                            }
+                            if(artifactFileName == null) {
+                                self.fail("unable to find dependency '" + varName + "'");
+                            }
+                        }
+                        artifactFile = new File(artifactFileName);
+                        if(!artifactFile.exists()) {
+                            self.fail("unable to find resource file '" + artifactFileName + 
+                                "' specified as '" + literalFileName + "' in file '" + srcFile + "'");
+                        }
+
+                        var resourcesNode = node.getParentNode();
+                        var resourceRootNode = doc.createElement("resource-root");
+                        resourceRootNode.setAttribute("path", artifactFile.getName());
+                        resourcesNode.replaceChild(resourceRootNode, node);
+                        Files.copy(artifactFile.toPath(), new File(srcFile.getParent(), artifactFile.getName()).toPath(), 
+                            StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+                        self.log("processed file '" + artifactFileName + 
+                                "' specified as '" + literalFileName + "' in file '" + srcFile + "'");
+                    }
+                    var fOut = new FileOutputStream(srcFile);
+                    try {
+                        var t = TransformerFactory.newInstance().newTransformer();
+                        t.setOutputProperty(OutputKeys.INDENT, "yes");
+                        t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+                        t.transform(new DOMSource(doc), new StreamResult(fOut));
+                    }
+                    finally {
+                        fOut.close();
+                    }
+                }
+            }
+        ]]>
+        </scriptdef>
+        <resolve-resource-dependencies>
+            <source-files dir="${project.build.outputDirectory}">
+                <include name="**/module.xml" />
+            </source-files>
+        </resolve-resource-dependencies>
+    </target>
+</project>

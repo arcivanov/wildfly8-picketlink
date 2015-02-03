@@ -25,7 +25,7 @@
     </exports>
 
     <resources>
-        <artifact name="${org.wildfly:wildfly-picketlink}"/>
+        <artifact name="${biz.ivanov.wildfly:wildfly-picketlink}"/>
     </resources>
 
     <dependencies>
@@ -41,7 +41,7 @@
         <module name="org.jboss.staxmapper"/>
         <module name="org.jboss.msc"/>
         <module name="org.jboss.as.web-common"/>
-        <module name="org.jboss.metadata.web"/>
+        <module name="org.jboss.metadata"/>
 
         <module name="javax.persistence.api"/>
         <module name="javax.transaction.api"/>
