@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
     <name>WildFly: WildFly 8 PicketLink Parent</name>
 
-    <url>http://ivanov.biz/picketlink-sub…-for-wildfly-8/</url>
+    <url>http://ivanov.biz/projects/picketlink-subsystem-for-wildfly-8/</url>
     <description>PicketLink Subsystem for WildFly 8</description>
 
     <!-- Licenses -->
