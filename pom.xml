@@ -34,6 +34,9 @@
         <developer>
             <name>PicketLink contributors</name>
         </developer>
+        <developer>
+            <name>WildFly contributors</name>
+        </developer>
     </developers>
 
     <!-- Source -->
@@ -43,6 +46,12 @@
         <url>http://github.com/arcivanov/wildfly8-picketlink</url>
         <tag>HEAD</tag>
     </scm>
+
+    <!-- Issues -->
+    <issueManagement>
+        <system>GitHub</system>
+        <url>http://github.com/arcivanov/wildfly8-picketlink/issues</url>
+    </issueManagement>
 
     <properties>
         <version.org.wildfly>8.2.0.Final</version.org.wildfly>
@@ -598,6 +607,18 @@
                         <tarLongFileMode>posix</tarLongFileMode>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -611,6 +632,52 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <deployAtEnd>true</deployAtEnd>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <configuration>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <goals>deploy</goals>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>
