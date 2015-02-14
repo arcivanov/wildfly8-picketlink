@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wildfly</groupId>
@@ -55,6 +56,7 @@
     <properties>
         <version.org.wildfly>8.2.0.Final</version.org.wildfly>
         <version.org.picketlink>2.7.0.CR3</version.org.picketlink>
+        <version.jandex>1.2.3.Final</version.jandex>
         <jboss.as.release.version>${version.org.wildfly}</jboss.as.release.version>
         <version.wildfly8-picketlink>${project.version}</version.wildfly8-picketlink>
     </properties>
