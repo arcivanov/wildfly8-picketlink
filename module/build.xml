@@ -1,9 +1,9 @@
 <project name="Resolve resource dependencies" default="init" basedir=".">
-    <target name="init">
-        <scriptdef name="resolve-resource-dependencies" language="javascript">
-            <element name="source-files" type="fileset" />
+	<target name="init">
+		<scriptdef name="resolve-resource-dependencies" language="javascript">
+			<element name="source-files" type="fileset" />
 
-            <![CDATA[
+			<![CDATA[
             load('nashorn:mozilla_compat.js');
 
             importClass(java.io.File);
@@ -19,12 +19,14 @@
             importClass(javax.xml.xpath.XPath);
             importClass(javax.xml.xpath.XPathConstants);
             importClass(javax.xml.xpath.XPathFactory);
+			//importClass(org.apache.tools.ant.taskdefs.Java);
             importClass(org.w3c.dom.Document);
             importClass(org.xml.sax.InputSource);
 
             var xpathExp = XPathFactory.newInstance().newXPath().compile("/module/resources/artifact");
             var filesets = elements.get("source-files");
-            for (i = 0; i < filesets.size(); i++) {
+			var jandexJarFile = new File(project.getProperty("project.build.directory") + "/dependency/jandex.jar");
+			for (i = 0; i < filesets.size(); i++) {
                 var fs = filesets.get(i);
                 var ds = fs.getDirectoryScanner(project);
                 var basedir  = fs.getDir(project);
@@ -71,10 +73,21 @@
                         var resourceRootNode = doc.createElement("resource-root");
                         resourceRootNode.setAttribute("path", artifactFile.getName());
                         resourcesNode.replaceChild(resourceRootNode, node);
-                        Files.copy(artifactFile.toPath(), new File(srcFile.getParent(), artifactFile.getName()).toPath(), 
+						var targetArtifactFile = new File(srcFile.getParent(), artifactFile.getName());
+                        Files.copy(artifactFile.toPath(), targetArtifactFile.toPath(), 
                             StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
                         self.log("processed file '" + artifactFileName + 
                                 "' specified as '" + literalFileName + "' in file '" + srcFile + "'");
+
+						var jandexTask = new org.apache.tools.ant.taskdefs.Java();
+						jandexTask.setProject(project);
+						jandexTask.setJar(jandexJarFile);
+						jandexTask.setFailonerror(true);
+						jandexTask.setFork(true);
+						jandexTask.createArg().setLine("-v");
+						jandexTask.createArg().setLine("-m");
+						jandexTask.createArg().setFile(targetArtifactFile);
+						jandexTask.execute();
                     }
                     var fOut = new FileOutputStream(srcFile);
                     try {
@@ -89,11 +102,11 @@
                 }
             }
         ]]>
-        </scriptdef>
-        <resolve-resource-dependencies>
-            <source-files dir="${project.build.outputDirectory}">
-                <include name="**/module.xml" />
-            </source-files>
-        </resolve-resource-dependencies>
-    </target>
+		</scriptdef>
+		<resolve-resource-dependencies>
+			<source-files dir="${project.build.outputDirectory}">
+				<include name="**/module.xml" />
+			</source-files>
+		</resolve-resource-dependencies>
+	</target>
 </project>
